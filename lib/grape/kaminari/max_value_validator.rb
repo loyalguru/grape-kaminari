@@ -1,12 +1,6 @@
 module Grape
   module Kaminari
-    base = if post_0_9_0_grape?
-             Grape::Validations::Base
-           else
-             Grape::Validations::SingleOptionValidator
-           end
-
-    class MaxValueValidator < base
+    class MaxValueValidator < Grape::Validations::Base
       def validate_param!(attr_name, params)
         return unless params[attr_name]
 
