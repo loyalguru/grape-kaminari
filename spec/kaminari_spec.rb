@@ -23,11 +23,7 @@ describe Grape::Kaminari do
 
     it 'adds to declared parameters' do
       subject.paginate
-      if Grape::Kaminari.post_0_9_0_grape?
-        expect(subject.inheritable_setting.route[:declared_params]).to eq([:page, :per_page, :offset])
-      else
-        expect(subject.settings[:declared_params]).to eq([:page, :per_page, :offset])
-      end
+      expect(subject.inheritable_setting.route[:declared_params]).to eq([:page, :per_page, :offset])
     end
 
     describe 'descriptions, validation, and defaults' do
@@ -35,7 +31,7 @@ describe Grape::Kaminari do
         subject.paginate
         subject.get '/' do; end
       end
-      let(:params) {subject.routes.first.route_params}
+      let(:params) {subject.routes.first.params}
 
       it 'does not require :page' do
         expect(params['page'][:required]).to eq(false)
@@ -84,10 +80,7 @@ describe Grape::Kaminari do
       it 'defaults :offset to 0' do
         expect(params['offset'][:default]).to eq(0)
       end
-
-
     end
-
   end
 
   describe 'custom paginated api' do
@@ -98,7 +91,7 @@ describe Grape::Kaminari do
       subject.paginate per_page:99, max_per_page: 999, offset: 9
       subject.get '/' do; end
     end
-    let(:params) {subject.routes.first.route_params}
+    let(:params) {subject.routes.first.params}
 
     it 'defaults :per_page to customized value' do
       expect(params['per_page'][:default]).to eq(99)
@@ -118,7 +111,6 @@ describe Grape::Kaminari do
     it 'defaults :offset to customized value' do
       expect(params['offset'][:default]).to eq(9)
     end
-
   end
 
   describe 'paginated api without :offset' do
@@ -126,13 +118,7 @@ describe Grape::Kaminari do
 
     it 'excludes :offset from declared params' do
       subject.paginate offset: false
-      if Grape::Kaminari.post_0_9_0_grape?
-        expect(subject.inheritable_setting.route[:declared_params]).not_to include(:offset)
-      else
-        expect(subject.settings[:declared_params]).not_to include(:offset)
-      end
+      expect(subject.inheritable_setting.route[:declared_params]).not_to include(:offset)
     end
-
   end
-
 end
